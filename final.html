@@ -2,6 +2,7 @@
 
   <head>
     <title>Vue Test</title>
+    <!-- Include semantic, my personal favourite front end framework -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css" media="screen" rel="stylesheet" type="text/css">
     <style>
       #vue_demo {
@@ -30,10 +31,17 @@
   </div>
 </body>
 
+<!-- Include the Vue library -->
 <script src="https://unpkg.com/vue@2.5.13/dist/vue.js"></script>
 
 <script type="text/javascript">
 
+  /**
+    Hotel Component
+    Handles the rendering of a single hotel
+    @prop hotel - hotel object, with at least a price, name, description and sale information
+    @TODO - abstract getting the hotel's sale price
+  */
   Vue.component('hotel', {
       props: ['hotel'],
       template: `
@@ -46,6 +54,9 @@
             </div>
       `,
       computed: {
+        /*
+          Returns either the hotel price, or it's sale price if it's on sale
+        */
         hotelPrice: function() {
           if (this.hotel.sale.price != null) {
             return this.hotel.sale.price;
@@ -53,6 +64,9 @@
             return this.hotel.price;
           }
         },
+        /*
+          Returns styling required to highlight sales
+        */
         priceStyles: function() {
           if (this.hotel.sale.price != null) {
               return "right floated red";
@@ -62,6 +76,9 @@
         }
       },
       methods: {
+        /*
+          Shows an alert that lists the original price of a sale hotel, or informs user there is no sale
+        */
         showOriginalPrice: function() {
           if (this.hotel.sale.price != null) {
             alert("Original Price - " + this.hotel.price + ", Sale Price - " + this.hotel.sale.price);
@@ -72,12 +89,18 @@
       }
   });
 
+  /*
+    Launch the Vue app
+  */
   var app = new Vue({
     el: '#vue_demo',
     data: {
       hotels: [],
       filterSale: false
     },
+    /*
+      On creation hit my test API to retrieve hotel information, and format this as json
+    */
     created() {
       fetch('https://api.myjson.com/bins/71ppd')
       .then(response => response.json())
