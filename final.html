@@ -45,7 +45,6 @@
     Hotel Component
     Handles the rendering of a single hotel
     @prop hotel - hotel object, with at least a price, name, description and sale information
-    @TODO - abstract getting the hotel's sale price
   */
   Vue.component('hotel', {
       props: ['hotel'],
@@ -62,10 +61,16 @@
       `,
       computed: {
         /*
+          Returns whether or not this hotel is having a sale or not
+        */
+        onSale: function() {
+            return this.hotel.sale.price != null;
+        },
+        /*
           Returns either the hotel price, or it's sale price if it's on sale
         */
         hotelPrice: function() {
-          if (this.hotel.sale.price != null) {
+          if (this.onSale) {
             return this.hotel.sale.price;
           } else {
             return this.hotel.price;
@@ -75,7 +80,7 @@
           Returns styling required to highlight sales
         */
         priceStyles: function() {
-          if (this.hotel.sale.price != null) {
+          if (this.onSale) {
               return "right floated red";
           } else {
               return "right floated"
@@ -87,7 +92,7 @@
           Shows an alert that lists the original price of a sale hotel, or informs user there is no sale
         */
         showOriginalPrice: function() {
-          if (this.hotel.sale.price != null) {
+          if (this.onSale) {
             alert("Original Price - " + this.hotel.price + ", Sale Price - " + this.hotel.sale.price);
           } else {
             alert("Not on sale!");
