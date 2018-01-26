@@ -1,0 +1,91 @@
+<html>
+
+  <head>
+    <title>Vue Test</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css" media="screen" rel="stylesheet" type="text/css">
+    <style>
+      #vue_demo {
+        padding-top: 10%;
+        padding-left: 10%;
+      }
+      .red {
+        color:#ff0000;
+      }
+    </style>
+  </head>
+<body>
+
+  <div id="vue_demo">
+    <h2 class="ui header">hotels</h2>
+
+    <input type="checkbox" v-model="filterSale"> Filter Sale
+    <div class="ui cards">
+        <hotel
+            v-for="hotel in hotels"
+            v-if="!filterSale || (filterSale && hotel.sale.price != null)"
+            :hotel="hotel"
+            :key="hotel.id">
+        </hotel>
+    </div>
+  </div>
+</body>
+
+<script src="https://unpkg.com/vue@2.5.13/dist/vue.js"></script>
+
+<script type="text/javascript">
+
+  Vue.component('hotel', {
+      props: ['hotel'],
+      template: `
+            <div class="card">
+                <div class="content">
+                    <div :class="priceStyles" v-on:click="showOriginalPrice">£{{ hotelPrice }}</div>
+                    <div class="header">{{ hotel.name }}</div>
+                    <div class="meta"> {{ hotel.description }} </div>
+                </div>
+            </div>
+      `,
+      computed: {
+        hotelPrice: function() {
+          if (this.hotel.sale.price != null) {
+            return this.hotel.sale.price;
+          } else {
+            return this.hotel.price;
+          }
+        },
+        priceStyles: function() {
+          if (this.hotel.sale.price != null) {
+              return "right floated red";
+          } else {
+              return "right floated"
+          }
+        }
+      },
+      methods: {
+        showOriginalPrice: function() {
+          if (this.hotel.sale.price != null) {
+            alert("Original Price - " + this.hotel.price + ", Sale Price - " + this.hotel.sale.price);
+          } else {
+            alert("Not on sale!");
+          }
+        }
+      }
+  });
+
+  var app = new Vue({
+    el: '#vue_demo',
+    data: {
+      hotels: [],
+      filterSale: false
+    },
+    created() {
+      fetch('https://api.myjson.com/bins/71ppd')
+      .then(response => response.json())
+      .then(json => {
+        this.hotels = json.hotels;
+      })
+    }
+  })
+
+</script>
+</html>
