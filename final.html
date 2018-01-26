@@ -12,6 +12,11 @@
       .red {
         color:#ff0000;
       }
+      img {
+        width:100px;
+        height:100px;
+        margin-right:20px!important;
+      }
     </style>
   </head>
 <body>
@@ -45,13 +50,15 @@
   Vue.component('hotel', {
       props: ['hotel'],
       template: `
-            <div class="card">
-                <div class="content">
-                    <div :class="priceStyles" v-on:click="showOriginalPrice">£{{ hotelPrice }}</div>
-                    <div class="header">{{ hotel.name }}</div>
-                    <div class="meta"> {{ hotel.description }} </div>
-                </div>
-            </div>
+          <div class="card">
+              <div class="content">
+                  <div :class="priceStyles" v-on:click="showOriginalPrice">£{{ hotelPrice }}</div>
+                  <div class="header">{{ hotel.name }}</div>
+                  <div class="meta">
+                  <img :src="hotel.img" align="left">
+                  {{ hotel.description }} </div>
+              </div>
+          </div>
       `,
       computed: {
         /*
@@ -102,7 +109,7 @@
       On creation hit my test API to retrieve hotel information, and format this as json
     */
     created() {
-      fetch('https://api.myjson.com/bins/71ppd')
+      fetch('https://api.myjson.com/bins/8nfpp')
       .then(response => response.json())
       .then(json => {
         this.hotels = json.hotels;
